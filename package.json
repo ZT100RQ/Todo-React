@@ -1,0 +1,54 @@
+{
+  "name": "react-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint ./src",
+    "preview": "vite preview",
+    "lint:fix": "eslint --debug ./src",
+    "format": "prettier --write ./src/test.js",
+    "prepare": "husky"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "YOUR_COMMAND_HERE",
+      "pre-commit": "YOUR_COMMAND_HERE"
+    }
+  },
+  "lint-staged": {
+    "*.(js|jsx)": [
+      "npm run lint:fix",
+      "npm run format",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "husky": "9.1.4",
+    "lint-staged": "15.2.9",
+    "prettier": "3.3.3",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-jsx-a11y": "6.9.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "globals": "^15.9.0",
+    "vite": "^5.4.1"
+  }
+}
