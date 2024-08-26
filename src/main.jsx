@@ -1,10 +1,10 @@
-import { createRoot } from "react-dom/client";
+import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
-import TodoApp from './TodoApp'
+import TodoApp from './TodoApp';
 
-const root = createRoot(document.getElementById("root"));
+const root = createRoot(document.getElementById('root'));
 root.render(
-<StrictMode>
+  <StrictMode>
     <TodoApp />
   </StrictMode>
 );

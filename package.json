@@ -9,7 +9,7 @@
     "lint": "eslint ./src",
     "preview": "vite preview",
     "lint:fix": "eslint --debug ./src",
-    "format": "prettier --write ./src/test.js",
+    "format": "prettier --write ./src",
     "prepare": "husky"
   },
   "husky": {

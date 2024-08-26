@@ -34,6 +34,7 @@ export default [
       'eslint/prettier': eslintConfigPrettier,
     },
     rules: {
+      // ...airbnbRules,
       ...prettierPlugin.configs.recommended.rules,
       ...airbnb.rules,
       ...eslintConfigPrettier.rules,
