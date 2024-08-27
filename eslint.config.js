@@ -30,7 +30,6 @@ export default [
       'react': react,
       'prettier': prettierPlugin,
       'import': importPlugin,
-      'airbnb': airbnb,
       'eslint/prettier': eslintConfigPrettier,
     },
     rules: {
