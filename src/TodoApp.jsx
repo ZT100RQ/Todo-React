@@ -56,7 +56,7 @@ class TodoApp extends Component {
   };
 
   inputValue = (event) => {
-    if (event.code === 'Enter') {
+    if (event.key === 13 && event.target.value.trim()) {
       this.addItem(event.target.value);
       event.target.value = '';
     }
@@ -98,7 +98,7 @@ class TodoApp extends Component {
   };
 
   changeDescription = (id) => {
-    if (event.code == 'Enter' && event.target.value.trim()) {
+    if (event.key === 13 && event.target.value.trim()) {
       this.setState(({ tasks }) => {
         const idx = tasks.findIndex((el) => el.id === id);
         const oldItem = tasks[idx];
