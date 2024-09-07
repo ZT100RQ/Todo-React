@@ -27,14 +27,12 @@ export default [
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      'react': react,
-      'prettier': prettierPlugin,
-      'import': importPlugin,
-      'airbnb': airbnb,
+      react: react,
+      prettier: prettierPlugin,
+      import: importPlugin,
       'eslint/prettier': eslintConfigPrettier,
     },
     rules: {
-      // ...airbnbRules,
       ...prettierPlugin.configs.recommended.rules,
       ...airbnb.rules,
       ...eslintConfigPrettier.rules,
@@ -45,23 +43,22 @@ export default [
       'react/jsx-no-target-blank': 'off',
       'react/react-in-jsx-scope': 'off',
       'linebreak-style': [0, 'unix'],
-      'quotes': ["error", "single"],
-      'semi': 0,
-      'endOfLine': 'off',
+      quotes: ['error', 'single'],
+      semi: 0,
+      endOfLine: 'off',
       'react/prop-types': 0,
-      "prettier/prettier": [
-    "error",
-    {
-      "singleQuote": true,
-      "parser": "flow",
-      "endOfLine": "auto"
-    }
-  ],
-      'indent': ['error', 2],
-      "no-mixed-spaces-and-tabs": 0,
+      'prettier/prettier': [
+        'error',
+        {
+          singleQuote: true,
+          parser: 'flow',
+          endOfLine: 'auto',
+        },
+      ],
+      indent: ['error', 2],
+      'no-mixed-spaces-and-tabs': 0,
       'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
-    
   },
 ];
