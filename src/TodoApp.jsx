@@ -26,7 +26,6 @@ class TodoApp extends Component {
       };
     });
   }
-
   componentDidUpdate() {
     this.setState(({ tasks }) => {
       window.localStorage.setItem('tasks', JSON.stringify(tasks));
