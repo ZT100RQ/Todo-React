@@ -18,19 +18,19 @@ class TodoApp extends Component {
       return { tasks: newArray };
     });
   };
-  componentDidMount() {
-    this.setState(() => {
-      const taskStorage = JSON.parse(window.localStorage.getItem('tasks'));
-      return {
-        tasks: taskStorage,
-      };
-    });
-  }
-  componentDidUpdate() {
-    this.setState(({ tasks }) => {
-      window.localStorage.setItem('tasks', JSON.stringify(tasks));
-    });
-  }
+  // componentDidMount() {
+  //   this.setState(() => {
+  //     const taskStorage = JSON.parse(window.localStorage.getItem('tasks'));
+  //     return {
+  //       tasks: taskStorage,
+  //     };
+  //   });
+  // }
+  // componentDidUpdate() {
+  //   this.setState(({ tasks }) => {
+  //     window.localStorage.setItem('tasks', JSON.stringify(tasks));
+  //   });
+  // }
 
   handleStartButton = (id) => {
     let currentTimerId = setInterval(() => {
