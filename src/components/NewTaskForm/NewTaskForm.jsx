@@ -12,9 +12,9 @@ const NewTaskForm = ({ inputValue = () => {} }) => {
           inputValue(event);
         }}
       >
-        <input className="new-todo" placeholder="Task?" autoFocus name="task" />
-        <input className="new-todo-form__timer" placeholder="Min" name="minutes" />
-        <input className="new-todo-form__timer" placeholder="Sec" name="seconds" />
+        <input className="new-todo" placeholder="Task?" autoFocus name="task" autoComplete="off" />
+        <input className="new-todo-form__timer" placeholder="Min" name="minutes" autoComplete="off" />
+        <input className="new-todo-form__timer" placeholder="Sec" name="seconds" autoComplete="off" />
         <button type="submit"></button>
       </form>
     </div>
