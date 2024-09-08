@@ -19,8 +19,11 @@ class TodoApp extends Component {
     });
   };
   componentDidMount() {
+    if (window.localStorage.getItem('tasks') == null) {
+      return;
+    }
     this.setState(() => {
-      if (window.localStorage.getItem('tasks').length == 0 || window.localStorage.getItem('tasks') == null) {
+      if (window.localStorage.getItem('tasks').length == 0) {
         return;
       }
       const taskStorage = JSON.parse(window.localStorage.getItem('tasks'));
