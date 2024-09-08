@@ -20,7 +20,7 @@ class TodoApp extends Component {
   };
   componentDidMount() {
     this.setState(() => {
-      if (window.localStorage.getItem('tasks').length == 0) {
+      if (window.localStorage.getItem('tasks').length == 0 || !window.localStorage.getItem('tasks')) {
         return;
       }
       const taskStorage = JSON.parse(window.localStorage.getItem('tasks'));
