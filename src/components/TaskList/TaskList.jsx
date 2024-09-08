@@ -3,6 +3,8 @@ import Task from '../Task/Task.jsx';
 import PropTypes from 'prop-types';
 
 const TaskList = ({
+  handleStartButton = () => {},
+  handleStopButton = () => {},
   tasks = [],
   onDeleted = () => {},
   onToggleComplete = () => {},
@@ -10,12 +12,18 @@ const TaskList = ({
   changeDescription = () => {},
 }) => {
   const elements = tasks.map((item) => {
-    const { id, ...itemProps } = item;
+    const { id, timer, ...itemProps } = item;
 
     return (
       <Task
         key={id}
         {...itemProps}
+        timer={timer}
+        handleStopButton={() => handleStopButton(id)}
+        handleStartButton={(event) => {
+          event.stopPropagation();
+          handleStartButton(id);
+        }}
         onDeleted={() => onDeleted(id)}
         onToggleComplete={() => onToggleComplete(id)}
         editTodo={() => editTodo(id)}

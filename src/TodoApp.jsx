@@ -14,14 +14,62 @@ class TodoApp extends Component {
   deleteItem = (id) => {
     this.setState(({ tasks }) => {
       const idx = tasks.findIndex((el) => el.id === id);
+      clearInterval(tasks[idx].timerId);
       const newArray = [...tasks.slice(0, idx), ...tasks.slice(idx + 1)];
       return { tasks: newArray };
     });
   };
 
-  addItem = (text) => {
+  handleStartButton = (id) => {
+    let currentTimerId = setInterval(() => {
+      this.setState(({ tasks }) => {
+        const idx = tasks.findIndex((el) => el.id === id);
+        const oldItem = tasks[idx];
+        if (oldItem.timer == 0) {
+          clearInterval(currentTimerId);
+          const newItem = {
+            ...oldItem,
+            timer: 0,
+            timerStarted: false,
+          };
+          const newArray = tasks.with(idx, newItem);
+          return { tasks: newArray };
+        }
+        const newItem = {
+          ...oldItem,
+          timer: oldItem.timer - 1,
+          timerStarted: true,
+          disabled: true,
+          timerId: currentTimerId,
+        };
+        const newArray = tasks.with(idx, newItem);
+        return { tasks: newArray };
+      });
+    }, 1000);
+  };
+
+  handleStopButton = (id) => {
+    this.setState(({ tasks }) => {
+      const idx = tasks.findIndex((el) => el.id === id);
+      const oldItem = tasks[idx];
+      if (oldItem.timerStarted) {
+        clearInterval(oldItem.timerId);
+      }
+      const newItem = {
+        ...oldItem,
+        timer: oldItem.timer,
+        timerStarted: false,
+        disabled: false,
+        timerId: null,
+      };
+      const newArray = tasks.with(idx, newItem);
+      return { tasks: newArray };
+    });
+  };
+
+  addItem = (task, seconds) => {
     const newItem = {
-      description: text,
+      description: task,
       id: this.maxId++,
       completed: false,
       classNames: '',
@@ -30,6 +78,9 @@ class TodoApp extends Component {
       edit: '',
       view: '',
       date: Date.now(),
+      timer: seconds,
+      timerStarted: false,
+      disabled: false,
     };
     this.setState(({ tasks }) => {
       const newArray = [...tasks, newItem];
@@ -41,7 +92,7 @@ class TodoApp extends Component {
     this.setState(({ tasks }) => {
       const idx = tasks.findIndex((el) => el.id === id);
       const oldItem = tasks[idx];
-
+      clearInterval(oldItem.timerId);
       const newItem = {
         ...oldItem,
         completed: !oldItem.completed,
@@ -56,10 +107,20 @@ class TodoApp extends Component {
   };
 
   inputValue = (event) => {
-    if (event.key === 'Enter' && event.target.value.trim()) {
-      this.addItem(event.target.value);
-      event.target.value = '';
+    if (!event.target[0].value.trim()) {
+      alert('Mandatory field: "Task"');
+      return;
     }
+    if (!Number.isInteger(Number(event.target[1].value)) || !Number.isInteger(Number(event.target[2].value))) {
+      alert('Wrong Min/Sec! Example: Min: 12 Sec: 10');
+      return;
+    }
+    const test = new FormData(event.target);
+    const seconds = Number(test.get('minutes')) * 60 + Number(test.get('seconds'));
+    this.addItem(test.get('task'), seconds);
+    event.target[0].value = '';
+    event.target[1].value = '';
+    event.target[2].value = '';
   };
 
   changeFilter = (key) => {
@@ -89,9 +150,8 @@ class TodoApp extends Component {
     this.setState(({ tasks }) => {
       const idx = tasks.findIndex((el) => el.id === id);
       const oldItem = tasks[idx];
-
+      clearInterval(oldItem.timerId);
       const newItem = { ...oldItem, edit: 'editing', view: 'view' };
-
       const newArray = tasks.with(idx, newItem);
       return { tasks: newArray };
     });
@@ -127,6 +187,8 @@ class TodoApp extends Component {
         <NewTaskForm inputValue={this.inputValue} />
         <section className="main">
           <TaskList
+            handleStartButton={this.handleStartButton}
+            handleStopButton={this.handleStopButton}
             tasks={todos}
             onDeleted={this.deleteItem}
             onToggleComplete={this.onToggleComplete}

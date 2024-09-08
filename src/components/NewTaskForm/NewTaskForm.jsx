@@ -5,7 +5,18 @@ const NewTaskForm = ({ inputValue = () => {} }) => {
   return (
     <div className="header">
       <h1>Todos</h1>
-      <input className="new-todo" placeholder="What needs to be done?" onKeyDown={(event) => inputValue(event)} />
+      <form
+        className="new-todo-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          inputValue(event);
+        }}
+      >
+        <input className="new-todo" placeholder="Task?" autoFocus name="task" />
+        <input className="new-todo-form__timer" placeholder="Min" name="minutes" />
+        <input className="new-todo-form__timer" placeholder="Sec" name="seconds" />
+        <button type="submit"></button>
+      </form>
     </div>
   );
 };

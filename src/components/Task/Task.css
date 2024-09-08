@@ -4,16 +4,43 @@
   border-bottom: 1px solid #ededed;
 }
 
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 li:last-child {
   border-bottom: none;
 }
 
-.editing {
+li.editing {
   border-bottom: none;
   padding: 0;
 }
 
-.editing .edit {
+.toggle-all + label {
+  width: 60px;
+  height: 34px;
+  font-size: 0;
+  position: absolute;
+  top: -52px;
+  left: -13px;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+li.editing .edit {
   display: block;
   width: calc(100% - 43px);
   padding: 12px 16px;
@@ -34,7 +61,7 @@ li .view {
   display: none;
 }
 
-.toggle {
+li .toggle {
   text-align: center;
   width: 40px;
   /* auto, since non-WebKit browsers doesn't support input styling */
@@ -49,11 +76,11 @@ li .view {
   cursor: pointer;
 }
 
-.toggle {
+li .toggle {
   opacity: 0;
 }
 
-.toggle + label {
+li .toggle + label {
   /*
 		Firefox requires `#` to be escaped - https://bugzilla.mozilla.org/show_bug.cgi?id=922433
 		IE and Edge requires *everything* to be escaped to render, so we do that instead of just the `#` - https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/7157459/
@@ -63,23 +90,27 @@ li .view {
   background-position: center left;
 }
 
-.toggle:checked + label {
+li .toggle:checked + label {
   background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E');
 }
 
-label {
+li label {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 15px 85px 15px 60px;
 }
 
-label .created {
+li .view {
+  position: relative;
+}
+
+li label .description {
   font-size: 13px;
   color: gray;
 }
 
-label .description {
+li label .title {
   word-break: break-all;
   display: block;
   line-height: 1.2;
@@ -88,42 +119,45 @@ label .description {
   color: #4d4d4d;
 }
 
-div.completed label .description {
+li .completed label .title {
   color: #cdcdcd;
   text-decoration: line-through;
 }
 
-.icon {
-  position: absolute;
-  top: 0;
-  bottom: -3px;
+li .icon {
   width: 30px;
   height: 40px;
   font-size: 34px;
   color: #cc9a9a;
-  margin: auto 0 11px;
+  margin: auto 0;
   transition: color 0.2s ease-out;
   cursor: pointer;
 }
 
-.icon:hover {
+li .icon:hover {
   color: #af5b5e;
 }
 
-.icon-destroy {
+li .icon-destroy {
+  position: absolute;
+  top: 0;
+  bottom: -3px;
   right: 10px;
 }
 
-.icon-destroy:after {
+li .icon-destroy:after {
   content: '×';
 }
 
-.icon-edit {
+li .icon-edit {
+  position: absolute;
+  top: 0;
+  bottom: -3px;
   font-size: 19px;
   right: 45px;
 }
 
-.icon-edit:after {
+li .icon-edit:after {
   content: '✎';
 }
 
@@ -133,4 +167,28 @@ div.completed label .description {
 
 li.editing:last-child {
   margin-bottom: -1px;
+}
+
+li .icon-pause {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+li .icon-play {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+li .icon-play {
+  font-size: 15px;
+}
+
+.icon-pause:after {
+  content: '⏸';
+}
+
+.icon-play:after {
+  content: '▶';
 }
