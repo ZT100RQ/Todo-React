@@ -13,7 +13,6 @@ const TaskList = ({
 }) => {
   const elements = tasks.map((item) => {
     const { id, timer, ...itemProps } = item;
-
     return (
       <Task
         key={id}

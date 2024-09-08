@@ -5,7 +5,6 @@ import TaskList from './components/TaskList/TaskList.jsx';
 import Footer from './components/Footer/Footer.jsx';
 
 class TodoApp extends Component {
-  maxId = 100;
   state = {
     filter: 'all',
     tasks: [],
@@ -19,6 +18,20 @@ class TodoApp extends Component {
       return { tasks: newArray };
     });
   };
+  componentDidMount() {
+    this.setState(() => {
+      const taskStorage = JSON.parse(window.localStorage.getItem('tasks'));
+      return {
+        tasks: taskStorage,
+      };
+    });
+  }
+
+  componentDidUpdate() {
+    this.setState(({ tasks }) => {
+      window.localStorage.setItem('tasks', JSON.stringify(tasks));
+    });
+  }
 
   handleStartButton = (id) => {
     let currentTimerId = setInterval(() => {
@@ -70,7 +83,7 @@ class TodoApp extends Component {
   addItem = (task, seconds) => {
     const newItem = {
       description: task,
-      id: this.maxId++,
+      id: Date.now(),
       completed: false,
       classNames: '',
       checked: false,
