@@ -19,31 +19,9 @@ const NewTaskForm = ({
           addTask(event);
         }}
       >
-        <input
-          className="new-todo"
-          placeholder="Task?"
-          value={inputTask}
-          onChange={handleInputTask}
-          autoFocus
-          name="task"
-          autoComplete="off"
-        />
-        <input
-          className="new-todo-form__timer"
-          value={inputMin}
-          onChange={handleInputMin}
-          placeholder="Min"
-          name="minutes"
-          autoComplete="off"
-        />
-        <input
-          className="new-todo-form__timer"
-          onChange={handleInputSec}
-          value={inputSec}
-          placeholder="Sec"
-          name="seconds"
-          autoComplete="off"
-        />
+        <input className="new-todo" placeholder="Task?" autoFocus name="task" />
+        <input className="new-todo-form__timer" placeholder="Min" name="minutes" />
+        <input className="new-todo-form__timer" placeholder="Sec" name="seconds" />
         <button type="submit"></button>
       </form>
     </div>
