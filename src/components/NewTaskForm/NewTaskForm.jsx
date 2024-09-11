@@ -1,7 +1,14 @@
 import './NewTaskForm.css';
 import PropTypes from 'prop-types';
-
-const NewTaskForm = ({ inputValue = () => {} }) => {
+const NewTaskForm = ({
+  addTask = () => {},
+  inputTask = '',
+  inputMin = '',
+  inputSec = '',
+  handleInputMin = () => {},
+  handleInputSec = () => {},
+  handleInputTask = () => {},
+}) => {
   return (
     <div className="header">
       <h1>Todos</h1>
@@ -9,12 +16,34 @@ const NewTaskForm = ({ inputValue = () => {} }) => {
         className="new-todo-form"
         onSubmit={(event) => {
           event.preventDefault();
-          inputValue(event);
+          addTask(event);
         }}
       >
-        <input className="new-todo" placeholder="Task?" autoFocus name="task" />
-        <input className="new-todo-form__timer" placeholder="Min" name="minutes" />
-        <input className="new-todo-form__timer" placeholder="Sec" name="seconds" />
+        <input
+          className="new-todo"
+          placeholder="Task?"
+          value={inputTask}
+          onChange={handleInputTask}
+          autoFocus
+          name="task"
+          autoComplete="off"
+        />
+        <input
+          className="new-todo-form__timer"
+          value={inputMin}
+          onChange={handleInputMin}
+          placeholder="Min"
+          name="minutes"
+          autoComplete="off"
+        />
+        <input
+          className="new-todo-form__timer"
+          onChange={handleInputSec}
+          value={inputSec}
+          placeholder="Sec"
+          name="seconds"
+          autoComplete="off"
+        />
         <button type="submit"></button>
       </form>
     </div>

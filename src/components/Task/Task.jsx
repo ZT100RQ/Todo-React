@@ -1,9 +1,14 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import './Task.css';
 import PropTypes from 'prop-types';
 
 class Task extends Component {
+  constructor(props) {
+    super(props);
+    this.inputEditRef = React.createRef();
+  }
+
   secondsTimer(timer) {
     let hours = Math.floor(timer / 3600);
     let minutes = Math.floor((timer - hours * 3600) / 60);
@@ -25,13 +30,18 @@ class Task extends Component {
     return time;
   }
 
+  componentDidUpdate() {
+    if (this.props.edit == 'editing') {
+      this.inputEditRef.current.focus();
+    }
+  }
   render() {
     const {
       description = 'Новая задача',
       onDeleted = () => {},
       onToggleComplete = () => {},
       classNames = '',
-      checked = false,
+      completed = false,
       edit = '',
       view = '',
       editTodo = () => {},
@@ -39,14 +49,15 @@ class Task extends Component {
       date = Date.now(),
       timer = 0,
       handleStartButton = () => {},
-      disabled = false,
+      timerStarted = false,
       handleStopButton = () => {},
+      cancelEditing = () => {},
     } = this.props;
 
     return (
       <li className={edit}>
         <div className={`${classNames} ${view}`}>
-          <input onChange={onToggleComplete} className="toggle" type="checkbox" checked={checked} />
+          <input onChange={onToggleComplete} className="toggle" type="checkbox" checked={completed} />
           <label htmlFor="stop">
             <span className="title" onClick={onToggleComplete}>
               {description}
@@ -54,11 +65,16 @@ class Task extends Component {
             <span className="description">
               <button
                 className="icon icon-play"
-                disabled={classNames ? !disabled : disabled}
+                disabled={classNames ? !timerStarted : timerStarted}
                 name="start"
                 onClick={handleStartButton}
               ></button>
-              <button className="icon icon-pause" disabled={!disabled} name="stop" onClick={handleStopButton}></button>
+              <button
+                className="icon icon-pause"
+                disabled={!timerStarted}
+                name="stop"
+                onClick={handleStopButton}
+              ></button>
               {this.secondsTimer(timer)}
             </span>
             <span className="description">{formatDistanceToNow(date, { includeSeconds: true })} ago</span>
@@ -66,7 +82,16 @@ class Task extends Component {
           <button className="icon icon-edit" onClick={editTodo}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>
         </div>
-        <input type="text" className="edit" defaultValue={description} onKeyDown={changeDescription} />
+        <input
+          ref={this.inputEditRef}
+          name="change"
+          type="text"
+          className="edit"
+          defaultValue={description}
+          onKeyUp={changeDescription}
+          onKeyDown={cancelEditing}
+          onBlur={cancelEditing}
+        />
       </li>
     );
   }

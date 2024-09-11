@@ -8,6 +8,7 @@ const TaskList = ({
   tasks = [],
   onDeleted = () => {},
   onToggleComplete = () => {},
+  cancelEditing = () => {},
   editTodo = () => {},
   changeDescription = () => {},
 }) => {
@@ -18,6 +19,7 @@ const TaskList = ({
         key={id}
         {...itemProps}
         timer={timer}
+        cancelEditing={() => cancelEditing(id)}
         handleStopButton={() => handleStopButton(id)}
         handleStartButton={(event) => {
           event.stopPropagation();

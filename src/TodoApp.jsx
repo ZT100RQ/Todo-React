@@ -8,6 +8,9 @@ class TodoApp extends Component {
   state = {
     filter: 'all',
     tasks: [],
+    inputTask: '',
+    inputMin: '',
+    inputSec: '',
   };
 
   deleteItem = (id) => {
@@ -19,7 +22,13 @@ class TodoApp extends Component {
     });
   };
   componentDidMount() {
+    if (window.localStorage.getItem('tasks') == null) {
+      return;
+    }
     this.setState(() => {
+      if (window.localStorage.getItem('tasks').length == 0) {
+        return;
+      }
       const taskStorage = JSON.parse(window.localStorage.getItem('tasks'));
       return {
         tasks: taskStorage,
@@ -51,7 +60,6 @@ class TodoApp extends Component {
           ...oldItem,
           timer: oldItem.timer - 1,
           timerStarted: true,
-          disabled: true,
           timerId: currentTimerId,
         };
         const newArray = tasks.with(idx, newItem);
@@ -71,7 +79,6 @@ class TodoApp extends Component {
         ...oldItem,
         timer: oldItem.timer,
         timerStarted: false,
-        disabled: false,
         timerId: null,
       };
       const newArray = tasks.with(idx, newItem);
@@ -79,24 +86,46 @@ class TodoApp extends Component {
     });
   };
 
-  addItem = (task, seconds) => {
-    const newItem = {
-      description: task,
+  handleInputTask = (event) => {
+    this.setState(() => {
+      return { inputTask: event.target.value };
+    });
+  };
+  handleInputMin = (event) => {
+    if (!Number.isInteger(Number(event.target.value))) {
+      return;
+    }
+    this.setState({ inputMin: event.target.value });
+  };
+  handleInputSec = (event) => {
+    if (!Number.isInteger(Number(event.target.value))) {
+      return;
+    }
+    this.setState({ inputSec: event.target.value });
+  };
+
+  addTask = () => {
+    if (!this.state.inputTask.trim() || (!this.state.inputSec && !this.state.inputMin)) {
+      return;
+    }
+    const newTask = {
+      description: this.state.inputTask,
       id: Date.now(),
       completed: false,
       classNames: '',
-      checked: false,
-      active: true,
       edit: '',
       view: '',
       date: Date.now(),
-      timer: seconds,
+      timer: Number(this.state.inputMin) * 60 + Number(this.state.inputSec),
       timerStarted: false,
-      disabled: false,
     };
-    this.setState(({ tasks }) => {
-      const newArray = [...tasks, newItem];
-      return { tasks: newArray };
+    this.setState((state) => {
+      return {
+        tasks: [...state.tasks, newTask],
+        inputTask: '',
+        inputMin: '',
+        inputSec: '',
+      };
     });
   };
 
@@ -109,30 +138,11 @@ class TodoApp extends Component {
         ...oldItem,
         completed: !oldItem.completed,
         classNames: oldItem.completed ? null : 'completed',
-        checked: !oldItem.checked,
-        active: !oldItem.active,
       };
 
       const newArray = tasks.with(idx, newItem);
       return { tasks: newArray };
     });
-  };
-
-  inputValue = (event) => {
-    if (!event.target[0].value.trim()) {
-      alert('Mandatory field: "Task"');
-      return;
-    }
-    if (!Number.isInteger(Number(event.target[1].value)) || !Number.isInteger(Number(event.target[2].value))) {
-      alert('Wrong Min/Sec! Example: Min: 12 Sec: 10');
-      return;
-    }
-    const test = new FormData(event.target);
-    const seconds = Number(test.get('minutes')) * 60 + Number(test.get('seconds'));
-    this.addItem(test.get('task'), seconds);
-    event.target[0].value = '';
-    event.target[1].value = '';
-    event.target[2].value = '';
   };
 
   changeFilter = (key) => {
@@ -144,7 +154,7 @@ class TodoApp extends Component {
       return this.state.tasks.filter((task) => task.completed);
     }
     if (key == 'active') {
-      return this.state.tasks.filter((task) => task.active);
+      return this.state.tasks.filter((task) => !task.completed);
     }
     if (key == 'all') {
       return this.state.tasks;
@@ -180,8 +190,23 @@ class TodoApp extends Component {
           edit: '',
           view: '',
           classNames: '',
-          checked: false,
-          active: true,
+          completed: false,
+        };
+        const newArray = tasks.with(idx, newItem);
+        return { tasks: newArray };
+      });
+    }
+  };
+  cancelEditing = (id) => {
+    if (event.key == 'Escape' || event.type == 'focusout') {
+      this.setState(({ tasks }) => {
+        const idx = tasks.findIndex((el) => el.id === id);
+        const oldItem = tasks[idx];
+        const newItem = {
+          ...oldItem,
+          edit: '',
+          view: '',
+          classNames: '',
           completed: false,
         };
         const newArray = tasks.with(idx, newItem);
@@ -191,14 +216,23 @@ class TodoApp extends Component {
   };
 
   render() {
-    const { filter, tasks } = this.state;
+    const { filter, tasks, inputTask, inputMin, inputSec } = this.state;
     const todos = this.sortedTasks(filter);
-    const todoLeft = tasks.filter((task) => task.active);
+    const todoLeft = tasks.filter((task) => !task.completed);
     return (
       <section className="todo-app">
-        <NewTaskForm inputValue={this.inputValue} />
+        <NewTaskForm
+          addTask={this.addTask}
+          inputTask={inputTask}
+          inputMin={inputMin}
+          inputSec={inputSec}
+          handleInputTask={this.handleInputTask}
+          handleInputSec={this.handleInputSec}
+          handleInputMin={this.handleInputMin}
+        />
         <section className="main">
           <TaskList
+            cancelEditing={this.cancelEditing}
             handleStartButton={this.handleStartButton}
             handleStopButton={this.handleStopButton}
             tasks={todos}
