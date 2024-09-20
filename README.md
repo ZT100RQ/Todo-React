@@ -1,2 +1,2 @@
 # Todo + Timer React Kata : 
-# https://todo-zt100rq-git-taimertodo-zt100rqs-projects.vercel.app/
+# https://todo-zt100rq-git-todo-hooks-zt100rqs-projects.vercel.app/
