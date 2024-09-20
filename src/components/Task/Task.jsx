@@ -1,113 +1,107 @@
-import React, { Component } from 'react';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import './Task.css';
-import PropTypes from 'prop-types';
+import { useEffect, useRef } from 'react';
 
-class Task extends Component {
-  constructor(props) {
-    super(props);
-    this.inputEditRef = React.createRef();
+function secondsTimer(timer) {
+  let hours = Math.floor(timer / 3600);
+  let minutes = Math.floor((timer - hours * 3600) / 60);
+  let seconds = timer - hours * 3600 - minutes * 60;
+  let time = '';
+
+  if (hours != 0) {
+    time = hours + ':';
   }
-
-  secondsTimer(timer) {
-    let hours = Math.floor(timer / 3600);
-    let minutes = Math.floor((timer - hours * 3600) / 60);
-    let seconds = timer - hours * 3600 - minutes * 60;
-    let time = '';
-
-    if (hours != 0) {
-      time = hours + ':';
-    }
-    if (minutes != 0 || time !== '') {
-      minutes = minutes < 10 && time !== '' ? '0' + minutes : String(minutes);
-      time += minutes + ':';
-    }
-    if (time === '') {
-      time = seconds + 's';
-    } else {
-      time += seconds < 10 ? '0' + seconds : String(seconds);
-    }
-    return time;
+  if (minutes != 0 || time !== '') {
+    minutes = minutes < 10 && time !== '' ? '0' + minutes : String(minutes);
+    time += minutes + ':';
   }
-
-  componentDidUpdate() {
-    if (this.props.edit == 'editing') {
-      this.inputEditRef.current.focus();
-    }
+  if (time === '') {
+    time = seconds + 's';
+  } else {
+    time += seconds < 10 ? '0' + seconds : String(seconds);
   }
-  render() {
-    const {
-      description = 'Новая задача',
-      onDeleted = () => {},
-      onToggleComplete = () => {},
-      classNames = '',
-      completed = false,
-      edit = '',
-      view = '',
-      editTodo = () => {},
-      changeDescription = () => {},
-      date = Date.now(),
-      timer = 0,
-      handleStartButton = () => {},
-      timerStarted = false,
-      handleStopButton = () => {},
-      cancelEditing = () => {},
-    } = this.props;
-
-    return (
-      <li className={edit}>
-        <div className={`${classNames} ${view}`}>
-          <input onChange={onToggleComplete} className="toggle" type="checkbox" checked={completed} />
-          <label htmlFor="stop">
-            <span className="title" onClick={onToggleComplete}>
-              {description}
-            </span>
-            <span className="description">
-              <button
-                className="icon icon-play"
-                disabled={classNames ? !timerStarted : timerStarted}
-                name="start"
-                onClick={handleStartButton}
-              ></button>
-              <button
-                className="icon icon-pause"
-                disabled={!timerStarted}
-                name="stop"
-                onClick={handleStopButton}
-              ></button>
-              {this.secondsTimer(timer)}
-            </span>
-            <span className="description">{formatDistanceToNow(date, { includeSeconds: true })} ago</span>
-          </label>
-          <button className="icon icon-edit" onClick={editTodo}></button>
-          <button className="icon icon-destroy" onClick={onDeleted}></button>
-        </div>
-        <input
-          ref={this.inputEditRef}
-          name="change"
-          type="text"
-          className="edit"
-          defaultValue={description}
-          onKeyUp={changeDescription}
-          onKeyDown={cancelEditing}
-          onBlur={cancelEditing}
-        />
-      </li>
-    );
-  }
+  return time;
 }
 
-Task.propTypes = {
-  description: PropTypes.string,
-  onDeleted: PropTypes.func,
-  onToggleComplete: PropTypes.func,
-  editTodo: PropTypes.func,
-  changeDescription: PropTypes.func,
-  classNames: PropTypes.string,
-  checked: PropTypes.bool,
-  edit: PropTypes.string,
-  view: PropTypes.string,
-  date: PropTypes.number,
-};
+function Task({
+  title,
+  date,
+  active,
+  isEdit,
+  timer,
+  isTimerOn,
+  handleEvents,
+  editTitle,
+  handleChangeInput,
+  handleStartButton,
+  handleStopButton,
+}) {
+  const inputRef = useRef(null);
+  useEffect(() => {
+    isEdit && inputRef.current.focus();
+    return;
+  }, [isEdit]);
+
+  return (
+    <li className={isEdit ? 'editing' : null}>
+      <div className={isEdit ? 'view' : active ? null : 'completed'}>
+        <input
+          checked={!active}
+          className="toggle"
+          type="checkbox"
+          onChange={() => handleEvents('TASK_COMPLETE', date)}
+          autoFocus
+        />
+        <label htmlFor="stop">
+          <span className="title" onClick={() => handleEvents('TASK_COMPLETE', date)}>
+            {title}
+          </span>
+          <span className="description">
+            <button
+              className="icon icon-play"
+              disabled={active ? isTimerOn : !isTimerOn}
+              onClick={() => handleStartButton(date)}
+            ></button>
+            <button
+              className="icon icon-pause"
+              disabled={!isTimerOn}
+              onClick={() => handleStopButton(date)}
+              name="stop"
+            ></button>
+            {secondsTimer(timer)}
+          </span>
+          <span className="description">{formatDistanceToNow(date, { includeSeconds: true })} ago</span>
+        </label>
+        <button
+          className="icon icon-edit"
+          onClick={() => {
+            handleEvents('EDIT_TASK', date);
+          }}
+        />
+        <button className="icon icon-destroy" onClick={() => handleEvents('DELETE_TASK', date)} />
+      </div>
+      <input
+        autoFocus
+        ref={inputRef}
+        className="edit"
+        type="text"
+        name="change"
+        value={editTitle}
+        onChange={handleChangeInput}
+        onKeyDown={(event) => {
+          if (event.key == 'Escape') {
+            handleEvents('ABORT_NEW_TITLE', date);
+          }
+        }}
+        onKeyUp={(event) => {
+          if (event.key == 'Enter' && event.target.value.trim()) handleEvents('ACCEPT_NEW_TITLE', date);
+        }}
+        onBlur={() => {
+          handleEvents('ABORT_NEW_TITLE', date);
+        }}
+      />
+    </li>
+  );
+}
 
 export default Task;

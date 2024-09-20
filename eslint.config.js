@@ -55,7 +55,7 @@ export default [
           endOfLine: 'auto',
         },
       ],
-      indent: ['error', 2],
+      indent: ['error', 2, { SwitchCase: 1 }],
       'no-mixed-spaces-and-tabs': 0,
       'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],

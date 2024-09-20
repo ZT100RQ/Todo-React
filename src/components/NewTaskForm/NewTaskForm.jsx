@@ -1,57 +1,44 @@
 import './NewTaskForm.css';
-import PropTypes from 'prop-types';
-const NewTaskForm = ({
-  addTask = () => {},
-  inputTask = '',
-  inputMin = '',
-  inputSec = '',
-  handleInputMin = () => {},
-  handleInputSec = () => {},
-  handleInputTask = () => {},
-}) => {
+
+function NewTaskForm({ handleFormTask, handleFormInputs, title, sec, min }) {
+  const handleTimerInputs = (event) => {
+    if (!Number.isInteger(Number(event.target.value))) {
+      return;
+    }
+    handleFormInputs(event);
+  };
+
   return (
     <div className="header">
       <h1>Todos</h1>
-      <form
-        className="new-todo-form"
-        onSubmit={(event) => {
-          event.preventDefault();
-          addTask(event);
-        }}
-      >
+      <form className="new-todo-form" onSubmit={(event) => handleFormTask(event)}>
         <input
+          value={title}
           className="new-todo"
+          autoComplete="off"
           placeholder="Task?"
-          value={inputTask}
-          onChange={handleInputTask}
-          autoFocus
-          name="task"
-          autoComplete="off"
+          name="title"
+          onChange={(event) => handleFormInputs(event)}
         />
         <input
           className="new-todo-form__timer"
-          value={inputMin}
-          onChange={handleInputMin}
+          autoComplete="off"
           placeholder="Min"
-          name="minutes"
-          autoComplete="off"
+          name="min"
+          value={min}
+          onChange={(event) => handleTimerInputs(event)}
         />
         <input
           className="new-todo-form__timer"
-          onChange={handleInputSec}
-          value={inputSec}
-          placeholder="Sec"
-          name="seconds"
           autoComplete="off"
+          placeholder="Sec"
+          name="sec"
+          value={sec}
+          onChange={(event) => handleTimerInputs(event)}
         />
-        <button type="submit"></button>
+        <button type="submit" />
       </form>
     </div>
   );
-};
-
-NewTaskForm.propTypes = {
-  inputValue: PropTypes.func,
-};
-
+}
 export default NewTaskForm;

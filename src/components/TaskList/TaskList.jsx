@@ -1,46 +1,23 @@
 import './TaskList.css';
 import Task from '../Task/Task.jsx';
-import PropTypes from 'prop-types';
 
-const TaskList = ({
-  handleStartButton = () => {},
-  handleStopButton = () => {},
-  tasks = [],
-  onDeleted = () => {},
-  onToggleComplete = () => {},
-  cancelEditing = () => {},
-  editTodo = () => {},
-  changeDescription = () => {},
-}) => {
-  const elements = tasks.map((item) => {
-    const { id, timer, ...itemProps } = item;
-    return (
-      <Task
-        key={id}
-        {...itemProps}
-        timer={timer}
-        cancelEditing={() => cancelEditing(id)}
-        handleStopButton={() => handleStopButton(id)}
-        handleStartButton={(event) => {
-          event.stopPropagation();
-          handleStartButton(id);
-        }}
-        onDeleted={() => onDeleted(id)}
-        onToggleComplete={() => onToggleComplete(id)}
-        editTodo={() => editTodo(id)}
-        changeDescription={() => changeDescription(id)}
-      />
-    );
-  });
-  return <ul className="todo-list">{elements}</ul>;
-};
-
-TaskList.propTypes = {
-  tasks: PropTypes.array,
-  onDeleted: PropTypes.func,
-  onToggleComplete: PropTypes.func,
-  editTodo: PropTypes.func,
-  changeDescription: PropTypes.func,
-};
+function TaskList({ tasks, handleEvents, editTitle, handleChangeInput, handleStartButton, handleStopButton }) {
+  return (
+    <ul className="todo-list">
+      {tasks.map(({ date, ...task }) => (
+        <Task
+          key={date}
+          {...task}
+          date={date}
+          handleEvents={handleEvents}
+          editTitle={editTitle}
+          handleChangeInput={handleChangeInput}
+          handleStartButton={handleStartButton}
+          handleStopButton={handleStopButton}
+        />
+      ))}
+    </ul>
+  );
+}
 
 export default TaskList;
